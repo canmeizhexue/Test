@@ -1,0 +1,282 @@
+apply plugin: 'com.android.application'
+apply plugin: 'bugly'
+
+bugly {
+    appId = '0acbfe93a1' // 注册时分配的App ID
+    appKey = 'cde5d93e-5aea-4565-ac91-f9386eaa0d7b' // 注册时分配的App Key
+}
+/**定义打包时间函数*/
+def packageTime() {
+    return new Date().format("yyyyMMdd-HHmm")
+}
+
+/**指定gradle以utf8编码进行java编译*/
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+    /**发布签名配置-通过读取配置文件设置或者利用Android Studio提供的打包功能**/
+    signingConfigs {
+        debug {}
+        release {}
+    }
+    /**默认配置*/
+    defaultConfig {
+        applicationId APPLICATION_ID
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode Integer.parseInt(VERSION_CODE)
+        versionName VERSION_NAME
+        ndk {
+            //模块名称
+            moduleName APP_NAME
+            //设置支持的SO库架构，默认是支持三个平台的"armeabi", "armeabi-v7a", "x86"；
+            abiFilters "armeabi", "armeabi-v7a"
+        }
+
+        /**开启multidex支持，dex突破65535的限制*/
+        multiDexEnabled true
+        /**默认是guanfang的渠道*/
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "test"]
+    }
+
+    /**增加虚拟机堆内存大小*/
+    dexOptions {
+        javaMaxHeapSize "2048M"
+        preDexLibraries = false
+        incremental true //增量编译
+    }
+
+    sourceSets {
+        main {
+            //指明jniLibs的目录
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7 //由于Android Studio1.4目前编译的源码最高只支持1.7，1.8还没有完全支持
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    /**build时lint检查，若有错误或者警告是否终止：true是；false否*/
+    lintOptions {
+        abortOnError false
+        disable 'InvalidPackage'
+    }
+
+    /**构建打包配置*/
+    buildTypes {
+        debug {//开发环境
+            //是否允许调试
+            debuggable true
+            //是否混淆
+            minifyEnabled false
+            //混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //开启压缩
+            zipAlignEnabled true
+            //打包签名配置
+            signingConfig signingConfigs.debug
+            //清除无用资源
+            shrinkResources true
+
+            //自定义字段，是否显示业务码
+            buildConfigField "boolean", "IS_SHOW_BUSI_CODE", "true"
+            //自定义字段，app 英文名称
+            buildConfigField "String", "APP_NAME", "\"${APP_NAME}\""
+        }
+
+        ebeta {//测试环境
+            //是否允许调试
+            debuggable true
+            //是否混淆
+            minifyEnabled false
+            //混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //开启压缩
+            zipAlignEnabled false
+            //清除无用资源
+            shrinkResources true
+            //打包签名配置
+            signingConfig signingConfigs.release
+
+            //自定义字段，是否显示业务码
+            buildConfigField "boolean", "IS_SHOW_BUSI_CODE", "true"
+            //自定义字段，app 英文名称
+            buildConfigField "String", "APP_NAME", "\"${APP_NAME}\""
+
+
+        }
+
+        fix {//模拟生产环境
+            //是否允许调试
+            debuggable true
+            //是否混淆
+            minifyEnabled true
+            //混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //开启压缩
+            zipAlignEnabled true
+            //清除无用资源
+            shrinkResources true
+            //打包签名配置
+            signingConfig signingConfigs.release
+
+            //自定义字段，是否显示业务码,正式发布的版本不启用该配置
+            buildConfigField "boolean", "IS_SHOW_BUSI_CODE", "true"
+            //自定义字段，app 英文名称
+            buildConfigField "String", "APP_NAME", "\"${APP_NAME}\""
+
+        }
+
+        stg {//预生产环境
+            //是否允许调试
+            debuggable true
+            //是否混淆
+            minifyEnabled true
+            //混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //开启压缩
+            zipAlignEnabled true
+            //清除无用资源
+            shrinkResources true
+            //打包签名配置
+            signingConfig signingConfigs.release
+
+            //自定义字段，是否显示业务码,正式发布的版本不启用该配置
+            buildConfigField "boolean", "IS_SHOW_BUSI_CODE", "true"
+            //自定义字段，app 英文名称
+            buildConfigField "String", "APP_NAME", "\"${APP_NAME}\""
+
+        }
+
+        release {//生产环境
+            //是否允许调试
+            debuggable false
+            //是否混淆
+            minifyEnabled true
+            //混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //开启压缩
+            zipAlignEnabled true
+            //清除无用资源
+            shrinkResources true
+            //打包签名配置
+            signingConfig signingConfigs.release
+            //自定义字段，是否显示业务码,正式发布的版本不启用该配置
+            buildConfigField "boolean", "IS_SHOW_BUSI_CODE", "false"
+            //自定义字段，app 英文名称
+            buildConfigField "String", "APP_NAME", "\"${APP_NAME}\""
+
+        }
+    }
+
+    /**
+     * 修改生成的最终文件名
+     * rename the apk with the version name
+     * add output file sub folder by build type
+     * */
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                //输出apk文件夹
+                String outputDirName = outputFile.parent + "/${variant.buildType.name}"
+                File outputDirectory = new File(outputDirName)
+
+                //构建类型名称
+                String buildTypeName = "${variant.buildType.name}"
+                //输出apk名称格式
+                def fileName
+                if (buildTypeName.equals("debug")) {
+                    fileName = APP_NAME + "-v${variant.versionName}(${TEST_ROUND})-${variant.productFlavors[0].name}-${variant.buildType.name}.apk".toLowerCase()
+                } else if (buildTypeName.equals("ebeta")) {
+                    fileName = APP_NAME + "-v${variant.versionName}(${TEST_ROUND})-${packageTime()}-${variant.buildType.name}.apk".toLowerCase()
+                } else {//打包时用
+                    fileName = APP_NAME + "-v${variant.versionName}(${TEST_ROUND})-${variant.productFlavors[0].name}-${packageTime()}-${variant.buildType.name}.apk".toLowerCase()
+                }
+                output.outputFile = new File(outputDirectory, fileName)
+            }
+        }
+    }
+
+    /**
+     * 渠道配置-批量设置（适用于渠道不多情况）
+     * <br/>最终改为结合360加固辅助打包
+     * */
+    productFlavors {
+        kid {/**000-内部渠道，用于测试，开发*/ }
+//        test {/**001-本应用官网*/ }
+//        cqq { /**002-腾讯应用宝*/ }
+//        c360 { /**003-360手机助手*/ }
+//        cbaidu { /**004-百度助手*/ }
+//        c91 { /**005-91应用市场*/ }
+//        caz { /**006-安卓市场*/ }
+//        cmi { /**008-小米应用商店*/ }
+//        chw { /**009-华为应用市场*/ }
+//        clenovo { /**010-联想乐商店*/ }
+//        cmm { /**011-移动MM*/ }
+//        coppo { /**012-OPPO商店*/ }
+//        csamsung { /**013-三星*/ }
+    }
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor' //for butterknife
+        exclude 'META-INF/MANIFEST.MF'
+    }
+}
+
+/*************************读取配置***************************/
+/**获取签名配置*/
+/***
+ * signing.properties文件放置于主应用module目录下，不加入git管理，内容为：
+ ##打包签名配置
+ [USERDATA]
+ STORE_FILE=../../android_demo_keystore.jks ##/path/to/your.jks
+ STORE_PASSWORD=androiddemo
+ KEY_ALIAS=androiddemo
+ KEY_PASSWORD=androiddemo
+ */
+File propFile = file('signing.properties');
+if (propFile.exists()) {
+    def Properties props = new Properties()
+    props.load(new FileInputStream(propFile))
+    if (props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    } else {
+        android.buildTypes.release.signingConfig = null
+    }
+} else {
+    android.buildTypes.release.signingConfig = null
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+
+    compile 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    compile 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+}
+/**
+ * 项目依赖全局配置
+ * Force Android Studio to Update Maven Snapshot Dependencies
+ * */
+configurations.all {
+    //check for updates every build（实时更新snapshot版本）
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
