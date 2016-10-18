@@ -12,7 +12,11 @@ import android.widget.TextView;
 
 import com.canmeizhexue.test.base.BaseActivity;
 import com.canmeizhexue.test.base.BaseAdapter;
+import com.canmeizhexue.test.image.CoordinateActivity;
 import com.canmeizhexue.test.image.ImageScaleTypeActivity;
+import com.canmeizhexue.test.image.ImageViewActivity;
+import com.canmeizhexue.test.image.MatrixDemoActivity;
+import com.canmeizhexue.test.image.TouchEventActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +70,10 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
 
         demoModels.clear();
         demoModels.add(new DemoModel("ImageScaleTypeActivity", ImageScaleTypeActivity.class));
+        demoModels.add(new DemoModel("ImageViewActivity", ImageViewActivity.class));
+        demoModels.add(new DemoModel("MatrixDemoActivity", MatrixDemoActivity.class));
+        demoModels.add(new DemoModel("CoordinateActivity", CoordinateActivity.class));
+        demoModels.add(new DemoModel("TouchEventActivity", TouchEventActivity.class));
 
     }
 
