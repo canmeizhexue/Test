@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/centerCrop"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="centerCrop" />
+            <ImageView
+                android:id="@+id/default_type"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999" android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/center"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="center"
+                android:visibility="gone"/>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/fitCenter"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="fitCenter" />
+
+            <ImageView
+                android:id="@+id/fitEnd"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="fitEnd" />
+
+            <ImageView
+                android:id="@+id/fitStart"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="fitStart" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/fitXY"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/centerInside"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/matrix"
+                android:layout_width="@dimen/image_width"
+                android:layout_height="@dimen/image_height"
+                android:layout_marginLeft="10dp"
+                android:background="#999999"
+                android:scaleType="matrix" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,41 +1,134 @@
 package com.canmeizhexue.test;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.tencent.bugly.crashreport.CrashReport;
+import com.canmeizhexue.test.base.BaseActivity;
+import com.canmeizhexue.test.base.BaseAdapter;
+import com.canmeizhexue.test.image.ImageScaleTypeActivity;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class MainActivity extends BaseActivity  implements AdapterView.OnItemClickListener{
+
+    @Bind(R.id.lv_demo)
+    ListView lvDemo;
+    @Bind(R.id.ll_root)
+    LinearLayout llRoot;
+
+    private List<DemoModel> demoModels;
+    private DemoAdapter demoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //bugly初始化,,当然也可以通过AndroidManifest文件来配置，详细情况可以查看bugly的高级配置文档
-        CrashReport.initCrashReport(this,"0acbfe93a1", BuildConfig.DEBUG);
-        findViewById(R.id.text).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new TestClass().doTest();
-            }
-        });
-        ImageView imageView= (ImageView) findViewById(R.id.image);
-//        ImageLoaderHelper.showImgFromResId(this,imageView,R.mipmap.res_test);
-//        ImageLoaderHelper.showImgFromNetwork(this,imageView,"http://www.274745.cc/imgall/obuwgnjonzuxa2ldfzrw63i/20100121/1396946_104643942888_2.jpg");
-        ImageLoaderHelper.showImgFromUri(this,imageView,ImageLoaderHelper.resourceIdToUri(this,R.mipmap.ic_launcher));
+        ButterKnife.bind(this);
+        demoModels = new ArrayList<>();
+        initData();
+        demoAdapter = new DemoAdapter(this,demoModels);
+        lvDemo.setAdapter(demoAdapter);
+        lvDemo.setOnItemClickListener(this);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+/*        // TODO 测试BlockCanary
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        DemoModel currdemo = (DemoModel) adapterView.getItemAtPosition(i);
+        if (currdemo!=null && currdemo.clazz != null) {
+            startActivity(new Intent(this, currdemo.clazz));
+        }
+
+    }
+    private void initData(){
+
+        demoModels.clear();
+        demoModels.add(new DemoModel("ImageScaleTypeActivity", ImageScaleTypeActivity.class));
 
     }
 
-    public void test(){
+    /**
+     * <p>DemoAdapter类 </p>
+     *
+     * @author silence
+     * @version 1.0 (2015/10/19)
+     */
+    public class DemoAdapter extends BaseAdapter<DemoModel> {
+        /**
+         * 构造函数，在这里初始化各项属性值
+         *
+         * @param context  上下文
+         * @param list     数据列表
+         */
+        public DemoAdapter(Context context, List<DemoModel> list) {
+            super(context, list);
+        }
 
+        /**
+         * 构造函数，在这里初始化各项属性值
+         *
+         * @param context  上下文
+         */
+        public DemoAdapter(Context context) {
+            super(context);
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.item_demo, parent, false);
+            }
+            DemoModel currDemo = list.get(position);
+
+            TextView tvName = (TextView) convertView.findViewById(R.id.tv_name);
+            tvName.setText(currDemo.name);
+
+            return convertView;
+        }
+    }
+    public static class DemoModel{
+        /**
+         * 名字
+         */
+        public String name;
+        /**
+         * 跳转界面的action
+         */
+        public Class clazz;
+
+        /**
+         * 构造方法
+         *
+         * @param name  名字
+         * @param clazz 跳转的Activity的class
+         */
+        public DemoModel(String name, Class clazz) {
+            this.name = name;
+            this.clazz = clazz;
+        }
     }
 
 

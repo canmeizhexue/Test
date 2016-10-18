@@ -277,6 +277,9 @@ dependencies {
     //https://github.com/bumptech/glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:support-v4:24.0.0'
+
+    // butterknife
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
 /**
  * 项目依赖全局配置
