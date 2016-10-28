@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.canmeizhexue.test.base.BaseActivity;
 import com.canmeizhexue.test.base.BaseAdapter;
+import com.canmeizhexue.test.facade.QQMessageTriggerActivity;
 import com.canmeizhexue.test.image.CoordinateActivity;
 import com.canmeizhexue.test.image.ImageScaleTypeActivity;
 import com.canmeizhexue.test.image.ImageViewActivity;
@@ -81,6 +82,7 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
         demoModels.add(new DemoModel("CoordinateActivity", CoordinateActivity.class));
         demoModels.add(new DemoModel("TouchEventActivity", TouchEventActivity.class));
         demoModels.add(new DemoModel("LightActivity", LightActivity.class));
+        demoModels.add(new DemoModel("QQMessageTriggerActivity", QQMessageTriggerActivity.class));
     }
     private void printClassLoader(){
         Application application = getApplication();

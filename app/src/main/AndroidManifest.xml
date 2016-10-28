@@ -14,7 +14,10 @@
     <uses-feature android:name="android.hardware.autofocus" />
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
+    <!--仿qq消息弹窗-->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!--仿qq消息弹窗-->
     <!--bugly-->
     <application
         android:allowBackup="true"
@@ -36,6 +39,20 @@
         <activity android:name=".image.TouchEventActivity"/>
 
         <activity android:name=".media.LightActivity"/>
+        <!--仿qq消息弹窗页面-->
+        <activity android:name=".facade.QQMessageDialogActivity"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:theme="@style/MyTransparent"/>
+        <activity android:name=".facade.QQMessageTriggerActivity"/>
+        <receiver android:name=".facade.MessageReceiver">
+            <intent-filter>
+                <action android:name="com.canmeizhexue.test.messageReceiver" />
+
+            </intent-filter>
+        </receiver>
+        <!--仿qq消息弹窗页面-->
+
     </application>
 
 </manifest>
