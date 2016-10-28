@@ -14,6 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**http://www.2cto.com/kf/201411/348601.html
+ * http://www.wjdiankong.cn/android中的imageview的scaletype属性详解/    只是看下效果，解释的不一定对
  * <p>ImageScaleTypeActivity类 概述，提供XXX功能</p>
  *
  * @author silence

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.canmeizhexue.test.R;
 import com.canmeizhexue.test.base.BaseActivity;
 
 import butterknife.Bind;

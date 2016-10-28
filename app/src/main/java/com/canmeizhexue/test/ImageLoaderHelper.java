@@ -56,8 +56,8 @@ public class ImageLoaderHelper {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
-                .centerCrop() // 图片的宽高比不变，缩放图片
-//                .fitCenter()//图片的宽高比改成imageview的宽高比，缩放图片
+//                .centerCrop() // 图片的宽高比不变，缩放图片，填满imageview，可能会裁剪,居中裁剪
+                .fitCenter()//图片的宽高比保持不变，，缩放图片，不一定填满imaveview
                 .placeholder(placeImgRes)
                 .error(errorImgRes)
                 .into(imageView);

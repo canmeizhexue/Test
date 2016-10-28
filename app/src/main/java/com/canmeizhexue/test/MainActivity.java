@@ -1,8 +1,11 @@
 package com.canmeizhexue.test;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +20,8 @@ import com.canmeizhexue.test.image.ImageScaleTypeActivity;
 import com.canmeizhexue.test.image.ImageViewActivity;
 import com.canmeizhexue.test.image.MatrixDemoActivity;
 import com.canmeizhexue.test.image.TouchEventActivity;
+import com.canmeizhexue.test.media.LightActivity;
+import com.canmeizhexue.test.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +49,7 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
         demoAdapter = new DemoAdapter(this,demoModels);
         lvDemo.setAdapter(demoAdapter);
         lvDemo.setOnItemClickListener(this);
+//        printClassLoader();
 
     }
 
@@ -74,7 +80,54 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
         demoModels.add(new DemoModel("MatrixDemoActivity", MatrixDemoActivity.class));
         demoModels.add(new DemoModel("CoordinateActivity", CoordinateActivity.class));
         demoModels.add(new DemoModel("TouchEventActivity", TouchEventActivity.class));
+        demoModels.add(new DemoModel("LightActivity", LightActivity.class));
+    }
+    private void printClassLoader(){
+        Application application = getApplication();
 
+        LogUtil.d("silence","----getPackageCodePath---"+application.getPackageCodePath());
+        LogUtil.d("silence","---getPackageResourcePath----"+application.getPackageResourcePath());
+        LogUtil.d("silence","---getCacheDir----"+application.getCacheDir());
+        LogUtil.d("silence","---getExternalCacheDir----"+application.getExternalCacheDir());
+        LogUtil.d("silence","---getFilesDir----"+application.getFilesDir());
+        LogUtil.d("silence","---getObbDir----"+application.getObbDir());
+        //这些目录在应用程序卸载的时候会删除
+        LogUtil.d("silence","---getExternalFilesDir----"+application.getExternalFilesDir(null));
+        LogUtil.d("silence","---getExternalFilesDir----"+application.getExternalFilesDir("hello"));
+
+        ApplicationInfo applicationInfo=application.getApplicationInfo();
+        LogUtil.d("silence","---dataDir----"+applicationInfo.dataDir);
+        LogUtil.d("silence","---sourceDir----"+applicationInfo.sourceDir);
+//        LogUtil.d("silence","---deviceProtectedDataDir----"+applicationInfo.deviceProtectedDataDir);
+        LogUtil.d("silence","---nativeLibraryDir----"+applicationInfo.nativeLibraryDir);
+        LogUtil.d("silence","---publicSourceDir----"+applicationInfo.publicSourceDir);
+        LogUtil.d("silence","---sharedLibraryFiles----"+applicationInfo.sharedLibraryFiles);
+        LogUtil.d("silence","---sourceDir----"+applicationInfo);
+
+//        LogUtil.d("silence","---getObbDir----"+application.getObbDirs());
+//        LogUtil.d("silence","---getCodeCacheDir----"+application.getCodeCacheDir());
+
+
+        Log.i("DEMO", "Context的类加载加载器:"+Context.class.getClassLoader());
+        Log.i("DEMO", "ListView的类加载器:"+ListView.class.getClassLoader());
+        Log.i("DEMO", "应用程序默认加载器:"+getClassLoader());
+        Log.i("DEMO", "系统类加载器:"+ClassLoader.getSystemClassLoader());
+        Log.i("DEMO", "系统类加载器和Context的类加载器是否相等:"+(Context.class.getClassLoader()==ClassLoader.getSystemClassLoader()));
+        Log.i("DEMO", "系统类加载器和应用程序默认加载器是否相等:"+(getClassLoader()==ClassLoader.getSystemClassLoader()));
+
+        Log.i("DEMO","打印应用程序默认加载器的委派机制:");
+        ClassLoader classLoader = getClassLoader();
+        while(classLoader != null){
+            Log.i("DEMO", "类加载器:"+classLoader);
+            classLoader = classLoader.getParent();
+        }
+
+        Log.i("DEMO","打印系统加载器的委派机制:");
+        classLoader = ClassLoader.getSystemClassLoader();
+        while(classLoader != null){
+            Log.i("DEMO", "类加载器:"+classLoader);
+            classLoader = classLoader.getParent();
+        }
     }
 
     /**

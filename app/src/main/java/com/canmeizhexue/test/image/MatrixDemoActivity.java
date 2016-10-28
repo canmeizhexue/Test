@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.canmeizhexue.test.R;
 import com.canmeizhexue.test.base.BaseActivity;
 
 
