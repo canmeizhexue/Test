@@ -22,6 +22,7 @@ import com.canmeizhexue.test.image.ImageViewActivity;
 import com.canmeizhexue.test.image.MatrixDemoActivity;
 import com.canmeizhexue.test.image.TouchEventActivity;
 import com.canmeizhexue.test.media.LightActivity;
+import com.canmeizhexue.test.recyclerview.RecyclerViewActivity;
 import com.canmeizhexue.test.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -83,6 +84,7 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
         demoModels.add(new DemoModel("TouchEventActivity", TouchEventActivity.class));
         demoModels.add(new DemoModel("LightActivity", LightActivity.class));
         demoModels.add(new DemoModel("QQMessageTriggerActivity", QQMessageTriggerActivity.class));
+        demoModels.add(new DemoModel("RecyclerViewActivity", RecyclerViewActivity.class));
     }
     private void printClassLoader(){
         Application application = getApplication();

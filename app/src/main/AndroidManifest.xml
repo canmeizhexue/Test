@@ -53,6 +53,9 @@
         </receiver>
         <!--仿qq消息弹窗页面-->
 
+        <activity android:name=".recyclerview.RecyclerViewActivity"/>
+        <activity android:name=".recyclerview.StaggeredGridLayoutActivity"/>
+
     </application>
 
 </manifest>
