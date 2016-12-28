@@ -25,6 +25,7 @@ import com.canmeizhexue.test.media.LightActivity;
 import com.canmeizhexue.test.recyclerview.RecyclerViewActivity;
 import com.canmeizhexue.test.utils.LogUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
         demoAdapter = new DemoAdapter(this,demoModels);
         lvDemo.setAdapter(demoAdapter);
         lvDemo.setOnItemClickListener(this);
-//        printClassLoader();
+        printClassLoader();
 
     }
 
@@ -104,6 +105,15 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
         LogUtil.d("silence","---sourceDir----"+applicationInfo.sourceDir);
 //        LogUtil.d("silence","---deviceProtectedDataDir----"+applicationInfo.deviceProtectedDataDir);
         LogUtil.d("silence","---nativeLibraryDir----"+applicationInfo.nativeLibraryDir);
+
+        File file = new File(applicationInfo.nativeLibraryDir);
+        if(file.exists() && file.isDirectory()){
+            String[]files=file.list();
+            for(String fileName:files){
+                LogUtil.d("silence","---nativeLibraryDir--fileName--"+ fileName);
+            }
+        }
+
         LogUtil.d("silence","---publicSourceDir----"+applicationInfo.publicSourceDir);
         LogUtil.d("silence","---sharedLibraryFiles----"+applicationInfo.sharedLibraryFiles);
         LogUtil.d("silence","---sourceDir----"+applicationInfo);
@@ -131,6 +141,29 @@ public class MainActivity extends BaseActivity  implements AdapterView.OnItemCli
         while(classLoader != null){
             Log.i("DEMO", "类加载器:"+classLoader);
             classLoader = classLoader.getParent();
+        }
+        //俩者的BootClassLoader是同一个实例
+
+        try {
+            Log.i("DEMO","打印应用程序默认加载器的委派机制:"+(getClassLoader().getParent()==classLoader.getParent()));
+        }catch (Exception e){
+
+            // 这样可以加上我们自己的信息
+            Exception exception = new Exception("崩溃啦--------",e );
+            //加上这句话，不再打印构造上面那个Exception的堆栈信息，不然堆栈信息过长的话，可能原来有用的信息却打印不出来了，，尤其是捕捉到UnsatisfiedLinkError
+            exception.setStackTrace(new StackTraceElement[0]);
+            exception.printStackTrace();
+        }catch (Error error){
+            if(error instanceof UnsatisfiedLinkError){
+                //描述信息可以加上applicationInfo.nativeLibraryDir里面是否真的存在相应文件
+                Error newError = new Error("发生错误了",error);
+                //加上这句话，不再打印构造上面那个Exception的堆栈信息，不然堆栈信息过长的话，可能原来有用的信息却打印不出来了，，尤其是捕捉到UnsatisfiedLinkError
+                newError.setStackTrace(new StackTraceElement[0]);
+                newError.printStackTrace();
+            }else {
+                error.printStackTrace();
+            }
+
         }
     }
 
